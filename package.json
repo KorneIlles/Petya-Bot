@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3"
+  },
+  "name": "petya-bot",
+  "version": "0.0.1",
+  "description": "This is a bot for the Jobhunt server to manage students",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kornél & Chris",
+  "license": "ISC"
+}
