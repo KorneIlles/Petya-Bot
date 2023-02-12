@@ -5,7 +5,6 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('hello')
         .setDescription('Greets the user with random niceties.')
-        //This is an example for a subcommand with user target
         .addSubcommand(subcommand =>
             subcommand
                 .setName('parameter1')
