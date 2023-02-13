@@ -43,23 +43,21 @@ module.exports = {
 
     async execute(interaction) {
         const option = interaction.options.getString('option')
-        if(option == "week_A"){
-            const role_id = process.env.WEEK_A_ROLE_ID
-            const role = interaction.guild.roles.cache.get(role_id);
-            interaction.member.roles.add(role)
-            await interaction.reply({
-                content: `You're now Week A!`,
-                ephemeral: true
-            });
-        }else if(option == "week_B"){
-            const role_id = process.env.WEEK_B_ROLE_ID
-            const role = interaction.guild.roles.cache.get(role_id);
-            interaction.member.roles.add(role)
-            await interaction.reply({
-                content: `You're now Week B!`,
-                ephemeral: true
-            });
-        }else if(option == "help"){
+        if(option == "week_A" || option == "week_B"){
+            if(alreadyHaveRole(interaction)){
+                await interaction.reply({
+                    content: `You already have a week, if you want to switch it, use the \'/week switch\' command!`,
+                    ephemeral: true
+                });
+            }else{
+                if(option == "week_A"){
+                    addRole(interaction, "A")
+                }else if(option == "week_B"){
+                    addRole(interaction, "B")
+                }
+            }
+        }
+        else if(option == "help"){
             const evenWeek = process.env.EVEN_WEEK
             const oddWeek = process.env.ODD_WEEK
             currentDate = new Date(); //current date
