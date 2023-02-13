@@ -1,6 +1,29 @@
 const {SlashCommandBuilder} = require('discord.js');
 require('dotenv').config();
 
+function alreadyHaveRole(interaction){
+    const aWeekRoleId = process.env.WEEK_A_ROLE_ID
+    const bWeekRoleId = process.env.WEEK_B_ROLE_ID
+    const hasAWeekRole = interaction.member.roles.cache.has(aWeekRoleId)
+    const hasBWeekRole = interaction.member.roles.cache.has(bWeekRoleId)
+    return hasAWeekRole || hasBWeekRole
+}
+
+async function addRole(interaction, week){
+    const role_id = week.toUpperCase() == "A"? process.env.WEEK_A_ROLE_ID : week.toUpperCase()  == "B" ? process.env.WEEK_B_ROLE_ID : "error"
+    if(role_id == "error"){
+        console.log("Wrong week parameter in week.js -> addRole() function!")
+    }else{
+        const role = interaction.guild.roles.cache.get(role_id);
+        interaction.member.roles.add(role)
+        await interaction.reply({
+            content: `You're now Week ${week}!`,
+            ephemeral: true
+        });
+    }
+    
+}
+
 
 module.exports = {
     data: new SlashCommandBuilder()
