@@ -1,4 +1,5 @@
 const {SlashCommandBuilder} = require('discord.js');
+const timeCalculation = require('../utility/time-calculation.js');
 require('dotenv').config();
 
 function alreadyHaveRole(interaction){
@@ -58,15 +59,10 @@ module.exports = {
             }
         }
         else if(option == "help"){
-            const evenWeek = process.env.EVEN_WEEK
-            const oddWeek = process.env.ODD_WEEK
-            currentDate = new Date(); //current date
-            startDate = new Date(currentDate.getFullYear(), 0, 1);  //January 1.
-            let days = Math.floor((currentDate - startDate) / //get the days until now
-                (24 * 60 * 60 * 1000));
-            
-            let currentWeekNumber = Math.ceil(days / 7); //get the number of weeks until now from days
-            let currentWeekLetter = currentWeekNumber%2 == 0 ? evenWeek : oddWeek
+            const evenWeekLetter = process.env.EVEN_WEEK
+            const oddWeekLetter = process.env.ODD_WEEK
+
+            let currentWeekLetter = timeCalculation.isEvenWeek() ? evenWeekLetter : oddWeekLetter
 
 
             await interaction.reply({
