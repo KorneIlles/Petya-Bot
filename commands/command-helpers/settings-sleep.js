@@ -26,7 +26,7 @@ async function sleepDateManager(interaction){
             }else{
                 await reportManager.stopUntilDate(validDateFromInput)
                 await interaction.reply({
-                    content:`Bot is stopped until the following date: ${validDateFromInput})`,
+                    content:`Bot is stopped until the following date: ${validDateFromInput}`,
                     ephemeral: true
                 })
             }
