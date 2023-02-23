@@ -19,9 +19,9 @@ async function dailyReportReady(client){
     let channel = client.channels.cache.get(roomId);
     const isEvenWeek = timeCalculator.isEvenWeek()
     if(isEvenWeek){
-      roleId = getCurrentWeekId(process.env.EVEN_WEEK)
+      roleId = getCurrentWeekId(env.EVEN_WEEK)
     }else{
-      roleId = getCurrentWeekId(process.env.ODD_WEEK)
+      roleId = getCurrentWeekId(env.ODD_WEEK)
     }
     await channel.send(`Daily report for: <@&${roleId}>`)
     createNewThread(channel).then((thread) => {
