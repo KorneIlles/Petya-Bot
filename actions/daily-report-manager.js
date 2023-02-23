@@ -47,8 +47,15 @@ async function dailyReportReady(client){
       console.log("AN ERRROR OCCURED WHILE CLOSING DAILY REPORT")
     }
   });
-  
-  dailyReportOpen()
+  const currentDate = new Date()
+  const stopDate = new Date(env.DAILY_REPORT_STOP_DATE)
+  if(currentDate>=stopDate){
+    dailyReportOpenOnReachedDay()
+  }else if(env.DAILY_REPORT_STOP_DATE == ""){
+    dailyReportOpen()
+  }else{
+    dailyReportClose()
+  }
 }
 
 function dailyReportOpen(){
