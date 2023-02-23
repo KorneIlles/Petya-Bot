@@ -1,24 +1,27 @@
 const cron = require('cron');
 require('dotenv').config();
 const timeCalculator = require("../utility/time-calculation.js")
-const {RichEmbed} = require('discord.js');
+const envUpdater = require("../utility/env-file-writer.js")
 
+const env = process.env
 let roleId = ""
 let dailyReportThreadId = ""
 let dailyReportOpening = null
 let dailyReportClosing = null
+let isOpeningRun = null
+let isClosingRun = null
 
 async function dailyReportReady(client){
   dailyReportOpening = new cron.CronJob('00 00 9 * * 2-4',async () => {
     // This runs every day from Tuesday-Thursday at 9:00:00
     
-    const roomId = process.env.DAILY_REPORT_ROOM_ID
+    const roomId = env.DAILY_REPORT_ROOM_ID
     let channel = client.channels.cache.get(roomId);
     const isEvenWeek = timeCalculator.isEvenWeek()
     if(isEvenWeek){
-      roleId = getCurrentWeekId(process.env.EVEN_WEEK)
+      roleId = getCurrentWeekId(env.EVEN_WEEK)
     }else{
-      roleId = getCurrentWeekId(process.env.ODD_WEEK)
+      roleId = getCurrentWeekId(env.ODD_WEEK)
     }
     await channel.send(`Daily report for: <@&${roleId}>`)
     createNewThread(channel).then((thread) => {
@@ -29,33 +32,79 @@ async function dailyReportReady(client){
   dailyReportClosing = new cron.CronJob('00 00 10 * * 2-4', async () => {
     // This runs every day from Tuesday-Thursday at 10:00:00
     
-    const roomId = process.env.DAILY_REPORT_ROOM_ID
+    const roomId = env.DAILY_REPORT_ROOM_ID
     const channel = client.channels.cache.get(roomId);  //get daily report channel from roomID
     const thread = channel.threads.fetch(dailyReportThreadId) //get thread by ID
     
-    const guild = client.guilds.cache.get("1039846791304183879");
-    await guild.members.fetch().then((members) => {  //cache all current users
-      members.map(member => console.log(member._roles))
-     });
+    const guild = client.guilds.cache.get(env.SERVER_ID);
+    await guild.members.fetch() //cache all current users
 
     let role = await guild.roles.fetch(roleId)
     let memberList = role.members
-    let memberListTags = memberList.map(user=>user.id); // users in role
+    try{
+      let memberListTags = memberList.map(user=>user.id); // users in role
+    }catch(err){
+      console.log("AN ERRROR OCCURED WHILE CLOSING DAILY REPORT")
+    }
   });
-  
-  dailyReportOpen()
+  const currentDate = new Date()
+  const stopDate = new Date(env.DAILY_REPORT_STOP_DATE)
+  if(currentDate>=stopDate){
+    dailyReportOpenOnReachedDay()
+  }else if(env.DAILY_REPORT_STOP_DATE == ""){
+    dailyReportOpen()
+  }else{
+    dailyReportClose()
+  }
 }
 
-function dailyReportOpen(){
+async function dailyReportOpen(){
   // When you want to start it, use:
+  isOpeningRun = true
+  isClosingRun = true
   dailyReportOpening.start()
   dailyReportClosing.start()
 }
 
-function dailyReportClose(){
+async function dailyReportOpenOnReachedDay(){
+  isOpeningRun = true
+  isClosingRun = true
+  env.DAILY_REPORT_STOP_DATE = ""
+  envUpdater.rewriteEnvFile()
+  dailyReportOpening.start()
+  dailyReportClosing.start()
+}
+
+async function dailyReportClose(){
     // You could also make a command to pause and resume the job
+  isOpeningRun = false
+  isClosingRun = false
   dailyReportOpening.stop()
   dailyReportClosing.stop()
+}
+
+async function dailyReportCloseUntilDate(date){
+  isOpeningRun = false
+  isClosingRun = false
+  env.DAILY_REPORT_STOP_DATE = date
+  envUpdater.rewriteEnvFile()
+  dailyReportOpening.stop()
+  dailyReportClosing.stop()
+}
+
+async function dailyReportClosingOpen(){
+  isClosingRun = true
+  dailyReportClosing.start()
+}
+
+async function dailyReportClosingClose(){
+  isClosingRun = false
+  dailyReportClosing.stop()
+}
+
+async function getOpenCloseStatus(){
+  return {open: isOpeningRun, 
+          close: isClosingRun}
 }
 
 async function createNewThread(channel){
@@ -69,12 +118,10 @@ async function createNewThread(channel){
 }
 
 function getCurrentWeekId(weekLetter){
-  const weekAId = process.env.WEEK_A_ROLE_ID;
-  const weekBId = process.env.WEEK_B_ROLE_ID;
-  if(weekLetter == "A"){
-    return weekAId
+  if(weekLetter == "A"){ // Current week is always SI, so we need TW week role
+    return env.WEEK_B_ROLE_ID
   }else if(weekLetter == "B"){
-    return weekBId
+    return env.WEEK_A_ROLE_ID
   }else{
     return "NO_ID"
   }
@@ -83,5 +130,10 @@ function getCurrentWeekId(weekLetter){
 module.exports = {
   ready: dailyReportReady,
   start: dailyReportOpen,
-  stop: dailyReportClose
+  startClosing: dailyReportClosingOpen,
+  stop: dailyReportClose,
+  stopDateReached: dailyReportOpenOnReachedDay,
+  stopUntilDate: dailyReportCloseUntilDate,
+  stopClosing: dailyReportClosingClose,
+  getStatus: getOpenCloseStatus,
 }

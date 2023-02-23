@@ -1,7 +1,6 @@
 const cron = require('cron');
 require('dotenv').config();
 const reportManager = require('../actions/daily-report-manager.js')
-const envUpdater = require("../utility/env-file-writer.js")
 const env = process.env;
 
 function autoRestart(client){
@@ -14,10 +13,8 @@ function autoRestart(client){
     if(env.DAILY_REPORT_STOP_DATE != ""){
         const dailyStopDate = new Date(env.DAILY_REPORT_STOP_DATE)
         if(dailyStopDate < currentDate){
-            reportManager.start()
-            env.DAILY_REPORT_STOP_DATE = ""
+            reportManager.stopDateReached()
             logChannel.send("Daily report manager restarted! Reason: Stop date reached")
-            envUpdater.rewriteEnvFile()
         }
     }
     });
