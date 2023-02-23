@@ -118,5 +118,10 @@ function getCurrentWeekId(weekLetter){
 module.exports = {
   ready: dailyReportReady,
   start: dailyReportOpen,
-  stop: dailyReportClose
+  startClosing: dailyReportClosingOpen,
+  stop: dailyReportClose,
+  stopDateReached: dailyReportOpenOnReachedDay,
+  stopUntilDate: dailyReportCloseUntilDate,
+  stopClosing: dailyReportClosingClose,
+  getStatus: getOpenCloseStatus,
 }
