@@ -109,12 +109,10 @@ async function createNewThread(channel){
 }
 
 function getCurrentWeekId(weekLetter){
-  const weekAId = process.env.WEEK_A_ROLE_ID;
-  const weekBId = process.env.WEEK_B_ROLE_ID;
-  if(weekLetter == "A"){
-    return weekAId
+  if(weekLetter == "A"){ // Current week is always SI, so we need TW week role
+    return env.WEEK_B_ROLE_ID
   }else if(weekLetter == "B"){
-    return weekBId
+    return env.WEEK_A_ROLE_ID
   }else{
     return "NO_ID"
   }
