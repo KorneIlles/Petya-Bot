@@ -36,14 +36,16 @@ async function dailyReportReady(client){
     const channel = client.channels.cache.get(roomId);  //get daily report channel from roomID
     const thread = channel.threads.fetch(dailyReportThreadId) //get thread by ID
     
-    const guild = client.guilds.cache.get("1039846791304183879");
-    await guild.members.fetch().then((members) => {  //cache all current users
-      members.map(member => console.log(member._roles))
-     });
+    const guild = client.guilds.cache.get(env.SERVER_ID);
+    await guild.members.fetch() //cache all current users
 
     let role = await guild.roles.fetch(roleId)
     let memberList = role.members
-    let memberListTags = memberList.map(user=>user.id); // users in role
+    try{
+      let memberListTags = memberList.map(user=>user.id); // users in role
+    }catch(err){
+      console.log("AN ERRROR OCCURED WHILE CLOSING DAILY REPORT")
+    }
   });
   
   dailyReportOpen()
