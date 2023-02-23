@@ -54,7 +54,16 @@ function dailyReportOpen(){
   dailyReportClosing.start()
 }
 
-function dailyReportClose(){
+async function dailyReportOpenOnReachedDay(){
+  isOpeningRun = true
+  isClosingRun = true
+  env.DAILY_REPORT_STOP_DATE = ""
+  envUpdater.rewriteEnvFile()
+  dailyReportOpening.start()
+  dailyReportClosing.start()
+}
+
+async function dailyReportClose(){
     // You could also make a command to pause and resume the job
   dailyReportOpening.stop()
   dailyReportClosing.stop()
