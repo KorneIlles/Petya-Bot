@@ -15,7 +15,7 @@ async function dailyReportReady(client){
   dailyReportOpening = new cron.CronJob('00 00 9 * * 2-4',async () => {
     // This runs every day from Tuesday-Thursday at 9:00:00
     
-    const roomId = process.env.DAILY_REPORT_ROOM_ID
+    const roomId = env.DAILY_REPORT_ROOM_ID
     let channel = client.channels.cache.get(roomId);
     const isEvenWeek = timeCalculator.isEvenWeek()
     if(isEvenWeek){
@@ -32,7 +32,7 @@ async function dailyReportReady(client){
   dailyReportClosing = new cron.CronJob('00 00 10 * * 2-4', async () => {
     // This runs every day from Tuesday-Thursday at 10:00:00
     
-    const roomId = process.env.DAILY_REPORT_ROOM_ID
+    const roomId = env.DAILY_REPORT_ROOM_ID
     const channel = client.channels.cache.get(roomId);  //get daily report channel from roomID
     const thread = channel.threads.fetch(dailyReportThreadId) //get thread by ID
     
