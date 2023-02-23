@@ -50,6 +50,8 @@ async function dailyReportReady(client){
 
 function dailyReportOpen(){
   // When you want to start it, use:
+  isOpeningRun = true
+  isClosingRun = true
   dailyReportOpening.start()
   dailyReportClosing.start()
 }
@@ -65,6 +67,8 @@ async function dailyReportOpenOnReachedDay(){
 
 async function dailyReportClose(){
     // You could also make a command to pause and resume the job
+  isOpeningRun = false
+  isClosingRun = false
   dailyReportOpening.stop()
   dailyReportClosing.stop()
 }
