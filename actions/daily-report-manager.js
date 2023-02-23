@@ -1,7 +1,7 @@
 const cron = require('cron');
 require('dotenv').config();
 const timeCalculator = require("../utility/time-calculation.js")
-const {RichEmbed} = require('discord.js');
+const envUpdater = require("../utility/env-file-writer.js")
 
 const env = process.env
 let roleId = ""
