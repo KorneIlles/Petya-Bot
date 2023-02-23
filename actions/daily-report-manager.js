@@ -58,7 +58,7 @@ async function dailyReportReady(client){
   }
 }
 
-function dailyReportOpen(){
+async function dailyReportOpen(){
   // When you want to start it, use:
   isOpeningRun = true
   isClosingRun = true
