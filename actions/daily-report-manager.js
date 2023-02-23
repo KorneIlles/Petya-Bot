@@ -3,6 +3,7 @@ require('dotenv').config();
 const timeCalculator = require("../utility/time-calculation.js")
 const {RichEmbed} = require('discord.js');
 
+const env = process.env
 let roleId = ""
 let dailyReportThreadId = ""
 let dailyReportOpening = null
