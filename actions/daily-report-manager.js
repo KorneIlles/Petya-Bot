@@ -7,6 +7,8 @@ let roleId = ""
 let dailyReportThreadId = ""
 let dailyReportOpening = null
 let dailyReportClosing = null
+let isOpeningRun = null
+let isClosingRun = null
 
 async function dailyReportReady(client){
   dailyReportOpening = new cron.CronJob('00 00 9 * * 2-4',async () => {
