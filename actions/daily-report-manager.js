@@ -69,6 +69,30 @@ async function dailyReportClose(){
   dailyReportClosing.stop()
 }
 
+async function dailyReportCloseUntilDate(date){
+  isOpeningRun = false
+  isClosingRun = false
+  env.DAILY_REPORT_STOP_DATE = date
+  envUpdater.rewriteEnvFile()
+  dailyReportOpening.stop()
+  dailyReportClosing.stop()
+}
+
+async function dailyReportClosingOpen(){
+  isClosingRun = true
+  dailyReportClosing.start()
+}
+
+async function dailyReportClosingClose(){
+  isClosingRun = false
+  dailyReportClosing.stop()
+}
+
+async function getOpenCloseStatus(){
+  return {open: isOpeningRun, 
+          close: isClosingRun}
+}
+
 async function createNewThread(channel){
   const weekNumber = timeCalculator.getWeeksUntilNow()
   const dayName = timeCalculator.dayNameFromToday("en-US")
