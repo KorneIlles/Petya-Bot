@@ -1,7 +1,6 @@
 const cron = require('cron');
 require('dotenv').config();
 const reportManager = require('../actions/daily-report-manager.js')
-const envUpdater = require("../utility/env-file-writer.js")
 const env = process.env;
 
 function autoRestart(client){
