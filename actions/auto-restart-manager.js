@@ -13,10 +13,8 @@ function autoRestart(client){
     if(env.DAILY_REPORT_STOP_DATE != ""){
         const dailyStopDate = new Date(env.DAILY_REPORT_STOP_DATE)
         if(dailyStopDate < currentDate){
-            reportManager.start()
-            env.DAILY_REPORT_STOP_DATE = ""
+            reportManager.stopDateReached()
             logChannel.send("Daily report manager restarted! Reason: Stop date reached")
-            envUpdater.rewriteEnvFile()
         }
     }
     });
