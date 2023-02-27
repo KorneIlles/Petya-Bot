@@ -46,7 +46,7 @@ module.exports = {
         } else if (option == "show") {
             console.log("show")
             let technologiesFinalForm = "";
-            queries.getTechnologies(userInfo.id)
+           await queries.getTechnologies(userInfo.id)
                 .then(technologies => {
                     let technologiesString = "";
                     technologies.forEach(value => {
@@ -59,7 +59,7 @@ module.exports = {
             }).finally(
                 console.log("hello in the finally block"))
             interaction.reply({
-                content: `this is your current tech stack: ${technologiesFinalForm}`,
+                content: `this is your current tech stack: ***${technologiesFinalForm}***`,
                 ephemeral: true
             });
         } else if (option === "delete") {
