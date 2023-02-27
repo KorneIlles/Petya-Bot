@@ -14,7 +14,7 @@ module.exports = {
         for (const tech of technologies) {
             if (tech.match(/^[A-Za-z0-9#]*$/) && tech.length >0) {
                 console.log(tech);
-                const capitalizedTech = utils.capitalizeFirstLetter(tech.trim());
+                const capitalizedTech = utils.capitalizeTheString(tech.trim());
                 await queries.checkIfTechnologyAlreadyAdded(userId, capitalizedTech)
                     .then(techExist => {
                         if (!techExist) {
