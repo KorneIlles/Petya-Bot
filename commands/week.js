@@ -1,16 +1,19 @@
 const {SlashCommandBuilder} = require('discord.js');
+const timeCalculation = require('../utility/time-calculation.js');
 require('dotenv').config();
+const env = process.env;
+
 
 function alreadyHaveRole(interaction){
-    const aWeekRoleId = process.env.WEEK_A_ROLE_ID
-    const bWeekRoleId = process.env.WEEK_B_ROLE_ID
+    const aWeekRoleId = env.WEEK_A_ROLE_ID
+    const bWeekRoleId = env.WEEK_B_ROLE_ID
     const hasAWeekRole = interaction.member.roles.cache.has(aWeekRoleId)
     const hasBWeekRole = interaction.member.roles.cache.has(bWeekRoleId)
     return hasAWeekRole || hasBWeekRole
 }
 
 async function addRole(interaction, week){
-    const role_id = week.toUpperCase() == "A"? process.env.WEEK_A_ROLE_ID : week.toUpperCase()  == "B" ? process.env.WEEK_B_ROLE_ID : "error"
+    const role_id = week.toUpperCase() == "A"? env.WEEK_A_ROLE_ID : week.toUpperCase()  == "B" ? env.WEEK_B_ROLE_ID : "error"
     if(role_id == "error"){
         console.log("Wrong week parameter in week.js -> addRole() function!")
     }else{
@@ -58,26 +61,20 @@ module.exports = {
             }
         }
         else if(option == "help"){
-            const evenWeek = process.env.EVEN_WEEK
-            const oddWeek = process.env.ODD_WEEK
-            currentDate = new Date(); //current date
-            startDate = new Date(currentDate.getFullYear(), 0, 1);  //January 1.
-            let days = Math.floor((currentDate - startDate) / //get the days until now
-                (24 * 60 * 60 * 1000));
-            
-            let currentWeekNumber = Math.ceil(days / 7); //get the number of weeks until now from days
-            let currentWeekLetter = currentWeekNumber%2 == 0 ? evenWeek : oddWeek
-
-
+            const evenWeekLetter = env.EVEN_WEEK
+            const oddWeekLetter = env.ODD_WEEK
+            let currentWeekLetter = timeCalculation.isEvenWeek() ? evenWeekLetter : oddWeekLetter
             await interaction.reply({
                 content: `If your current week is SI, then your week is: ${currentWeekLetter}!`,
                 ephemeral: true
             });
-
-
         }else if(option == "switch"){
-            const aWeekRoleId = process.env.WEEK_A_ROLE_ID
-            const bWeekRoleId = process.env.WEEK_B_ROLE_ID
+            switchWeek()
+        }
+
+        async function switchWeek(){
+            const aWeekRoleId = env.WEEK_A_ROLE_ID
+            const bWeekRoleId = env.WEEK_B_ROLE_ID
             if(interaction.member.roles.cache.has(aWeekRoleId)){
                 interaction.member.roles.remove(aWeekRoleId)
                 interaction.member.roles.add(bWeekRoleId)
@@ -98,7 +95,7 @@ module.exports = {
                     ephemeral: true
                 });
             }
-            
+
         }
     },
 };
