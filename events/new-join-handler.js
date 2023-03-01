@@ -9,7 +9,7 @@ module.exports = {
     name: Events.GuildMemberAdd,
     execute(member) {
         member.client.channels.cache.get(welcomeRoomId).send({content: 'New student: ' + "<@" + member.user.id + ">" + '!'}),
-        member.client.channels.cache.get(logRoomId).send({content: 'Log:> New student: ' + "<@" + member.user.id + ">" + '!'})
+        member.client.channels.cache.get(logRoomId).send({content: 'Log > New student: ' + "<@" + member.user.id + ">" + '!'})
 
         queries.checkIfIdExists( member.user.id)
             .then(idExists => {
