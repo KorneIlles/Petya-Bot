@@ -9,7 +9,7 @@ const {
 } = require('discord.js');
 
 const queries = require('../database/database-queries.js');
-const utils = require("../utils/utils");
+const utils = require("../utility/capitalizeTheString");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -39,7 +39,6 @@ module.exports = {
                 .setDescription("this command reset your whole tech stack")
         ),
     async execute(interaction) {
-        console.log(interaction.options._subcommand);
         const option = interaction.options._subcommand;
         const userInfo = interaction.member.user
 
@@ -121,7 +120,6 @@ module.exports = {
                 }
                 break;
             case 'reset':
-                console.log("this is the reset case");
                 queries.resetTechStack(userInfo.id, (error) => {
                     if (error) {
                         console.error(error);
@@ -139,123 +137,3 @@ module.exports = {
         }
     }
 }
-
-
-// module.exports = {
-//     data: new SlashCommandBuilder()
-//         .setName(`tech-stack`)
-//         .setDescription(`There will be appear a modal window where you can add your techs to your techStack.`)
-//         .addStringOption(option =>
-//             option
-//                 .setName('option')
-//                 .setDescription('Choose show, add, delete or reset your tech stack!')
-//                 .setRequired(true)
-//                 .addChoices(
-//                     {name: 'show', value: "show"},
-//                     {name: "add", value: "add"},
-//                     {name: "delete", value: "delete"},
-//                     {name: "reset", value: "reset"}
-//                 )
-//         ).addStringOption(option =>
-//             option
-//                 .setName('need-for-delete')
-//                 .setDescription('this need for delete command')
-//         ),
-//     async execute(interaction) {
-//         const option = interaction.options.getString('option');
-//         const userInfo = interaction.member.user
-//         if (option === "add") {
-//             const modal = new ModalBuilder()
-//                 .setCustomId(`techStackModal`)
-//                 .setTitle(`${userInfo.username}'s tech stack`);
-//
-//             const textInput = new TextInputBuilder()
-//                 .setCustomId(`techStackInput`)
-//                 .setLabel(`add technologies like: java,c# (use commas)`)
-//                 .setRequired(false)
-//                 .setStyle(TextInputStyle.Paragraph);
-//
-//             modal.addComponents(
-//                 new ActionRowBuilder()
-//                     .addComponents(textInput)
-//             );
-//
-//             await interaction.showModal(modal);
-//         } else if (option == "show") {
-//             console.log("show")
-//             let technologiesFinalForm = "";
-//             await queries.getTechnologies(userInfo.id)
-//                 .then(technologies => {
-//                     let technologiesString = "";
-//                     technologies.forEach(value => {
-//                         technologiesString = `${technologiesString}, ${value.technology}`
-//                     })
-//                     technologiesFinalForm = technologiesString.substring(1);
-//                     console.log(`technologies after the forEach  ${technologiesFinalForm}`)
-//                 }).catch(error => {
-//                     console.error(error);
-//                 }).finally(
-//                     console.log("hello in the finally block"))
-//             interaction.reply({
-//                 content: `this is your current tech stack: ***${technologiesFinalForm}***`,
-//                 ephemeral: true
-//             });
-//         } else if (option === "delete") {
-//             console.log("delete")
-//             const technology = interaction.options.getString('need-for-delete');
-//
-//         } else if (option === "reset") {
-//             console.log("reset");
-//         }
-//     }
-// }
-
-
-//
-// async execute(interaction) {
-//     const option = interaction.options.getString('option');
-//     const userInfo = interaction.member.user
-//     if (option === "add") {
-//         const modal = new ModalBuilder()
-//             .setCustomId(`techStackModal`)
-//             .setTitle(`${userInfo.username}'s tech stack`);
-//
-//         const textInput = new TextInputBuilder()
-//             .setCustomId(`techStackInput`)
-//             .setLabel(`add technologies like: java,c# (use commas)`)
-//             .setRequired(false)
-//             .setStyle(TextInputStyle.Paragraph);
-//
-//         modal.addComponents(
-//             new ActionRowBuilder()
-//                 .addComponents(textInput)
-//         );
-//
-//         await interaction.showModal(modal);
-//     } else if (option == "show") {
-//         console.log("show")
-//         let technologiesFinalForm = "";
-//         await queries.getTechnologies(userInfo.id)
-//             .then(technologies => {
-//                 let technologiesString = "";
-//                 technologies.forEach(value => {
-//                     technologiesString = `${technologiesString}, ${value.technology}`
-//                 })
-//                 technologiesFinalForm = technologiesString.substring(1);
-//                 console.log(`technologies after the forEach  ${technologiesFinalForm}`)
-//             }).catch(error => {
-//                 console.error(error);
-//             }).finally(
-//                 console.log("hello in the finally block"))
-//         interaction.reply({
-//             content: `this is your current tech stack: ***${technologiesFinalForm}***`,
-//             ephemeral: true
-//         });
-//     } else if (option === "delete") {
-//         console.log("delete")
-//         const technology = interaction.options.getString('need-for-delete');
-//
-//     } else if (option === "reset") {
-//         console.log("reset");
-//     }
-// }

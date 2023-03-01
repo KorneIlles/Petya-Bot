@@ -1,5 +1,5 @@
 const queries = require('../database/database-queries.js');
-const utils = require('../utils/utils.js')
+const utils = require('../utility/capitalizeTheString.js')
 
 module.exports = {
     data: {
@@ -13,7 +13,6 @@ module.exports = {
 
         for (const tech of technologies) {
             if (tech.match(/^[A-Za-z0-9#]*$/) && tech.length >0) {
-                console.log(tech);
                 const capitalizedTech = utils.capitalizeTheString(tech.trim());
                 await queries.checkIfTechnologyInTheDatabase(userId, capitalizedTech)
                     .then(techExist => {
@@ -21,7 +20,6 @@ module.exports = {
                             queries.addTechToUserTechStack(userId, capitalizedTech);
 
                             addedTechs.push(capitalizedTech);
-                            console.log(addedTechs)
                         }
                     })
                     .catch(error => {
