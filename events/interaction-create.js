@@ -25,7 +25,7 @@ module.exports = {
             }
         }else if (interaction.type === InteractionType.ModalSubmit){
            if (interaction.customId === 'techStackModal'){
-               techStackModal.execute(interaction);
+              await techStackModal.execute(interaction);
                interaction.member.client.channels.cache.get(logRoomId).send({content: interaction.fields.getTextInputValue("techStackInput").includes(',')?
                        `Log > Added these technologies: ***${interaction.fields.getTextInputValue("techStackInput")}*** to: <@${interaction.member.user.id}>!`
                        :`Log > Added this technology: ***${interaction.fields.getTextInputValue("techStackInput")}*** to: <@${interaction.member.user.id}>!`})

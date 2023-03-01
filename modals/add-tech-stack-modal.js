@@ -3,7 +3,7 @@ const utils = require('../utils/utils.js')
 
 module.exports = {
     data: {
-        name: `test text`
+        name: `add-tech-stack-modal`
     },
     async execute(interaction) {
         const addedTechs = [];
@@ -15,7 +15,7 @@ module.exports = {
             if (tech.match(/^[A-Za-z0-9#]*$/) && tech.length >0) {
                 console.log(tech);
                 const capitalizedTech = utils.capitalizeTheString(tech.trim());
-                await queries.checkIfTechnologyAlreadyAdded(userId, capitalizedTech)
+                await queries.checkIfTechnologyInTheDatabase(userId, capitalizedTech)
                     .then(techExist => {
                         if (!techExist) {
                             queries.addTechToUserTechStack(userId, capitalizedTech);

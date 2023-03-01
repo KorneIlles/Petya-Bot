@@ -29,7 +29,7 @@ function addTechToUserTechStack(userId, tech) {
     });
 }
 
-function checkIfTechnologyAlreadyAdded(userId, tech) {
+function checkIfTechnologyInTheDatabase(userId, tech) {
     return new Promise((resolve, reject) => {
         const query = `SELECT EXISTS(SELECT 1
                                      FROM tech_stack
@@ -55,11 +55,25 @@ function getTechnologies(userId) {
     });
 }
 
+function deleteTechnology(userId, techName, callback) {
+
+    database.query('DELETE FROM tech_stack WHERE user_id = ? AND technology = ?', [userId, techName], (error) => {
+        callback(error);
+    });
+}
+
+function resetTechStack(userId,callback){
+    database.query('DELETE FROM tech_stack WHERE user_id = ?',[userId], (error) =>{
+        callback(error);
+    });
+}
 
 module.exports = {
     addUserToDatabase,
     checkIfIdExists,
     addTechToUserTechStack,
-    checkIfTechnologyAlreadyAdded,
-    getTechnologies
+    checkIfTechnologyInTheDatabase,
+    getTechnologies,
+    deleteTechnology,
+    resetTechStack
 }

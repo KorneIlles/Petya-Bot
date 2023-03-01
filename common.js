@@ -5,7 +5,6 @@ const path = require('node:path');
 const commandsPath = path.join(__dirname, 'commands');
 const eventsPath = path.join(__dirname, 'events');
 const modalsPath = path.join(__dirname,'modals');
-
 module.exports = {
     commandsPath: commandsPath,
     eventsPath: eventsPath,

@@ -1,6 +1,13 @@
 const path = require('node:path');
 const {Client, Collection, Events, GatewayIntentBits} = require('discord.js');
-const {commandsPath, commandFiles, eventsPath, eventFiles,modalFiles,modalsPath} = require('./common.js');
+const {
+    commandsPath,
+    commandFiles,
+    eventsPath,
+    eventFiles,
+    modalFiles,
+    modalsPath
+} = require('./common.js');
 require('dotenv').config();
 const token = process.env.TOKEN;
 
@@ -42,7 +49,7 @@ for (const file of eventFiles) {
     }
 }
 
-for (const file of modalFiles){
+for (const file of modalFiles) {
     const filePath = path.join(modalsPath, file);
     const modal = require(filePath);
 }
