@@ -107,6 +107,26 @@ async function getOpenCloseStatus(){
           close: isClosingRun}
 }
 
+/**
+ * @description With the use of this function we can activate or deactivate the thread making when a new daily report is created
+ *
+ * @param {String} newStatus Needs to be a String value, with the following options:
+ * - **on** -  the bot is making a thread, when writes in the daily report channel
+ * - **off** - the bot is not making the thread
+ * 
+ */
+async function openingThreadCreationStatusChanger(newStatus){
+  const validInputs = ["on", "off"]
+  if(validInputs.includes(newStatus.toLowerCase())){
+    env.DAILY_REPORT_OPENING_THREAD = newStatus.toUpperCase()
+    await envUpdater.rewriteEnvFile()
+  }else{
+    console.log(`INVALID PARAMETER GIVEN FOR \'openingThreadCreationStatusChanger\'\n Given variable is: ${newStatus} instead of ${validInputs.join(", ")}`)
+  }
+
+  
+}
+
 async function createNewThread(channel){
   const weekNumber = timeCalculator.getWeeksUntilNow()
   const dayName = timeCalculator.dayNameFromToday("en-US")
