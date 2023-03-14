@@ -24,10 +24,11 @@ async function dailyReportReady(client){
       roleId = getCurrentWeekId(env.ODD_WEEK)
     }
     await channel.send(`Daily report for: <@&${roleId}>`)
-    createNewThread(channel).then((thread) => {
+    if(env.DAILY_REPORT_OPENING_THREAD.toUpperCase() == "ON"){
+      await createNewThread(channel).then((thread) => {      //creates a thread for the day
       dailyReportThreadId = thread.id
-    })
-      
+    })}
+    
   });
   dailyReportClosing = new cron.CronJob('00 00 10 * * 2-4', async () => {
     // This runs every day from Tuesday-Thursday at 10:00:00
@@ -156,4 +157,5 @@ module.exports = {
   stopUntilDate: dailyReportCloseUntilDate,
   stopClosing: dailyReportClosingClose,
   getStatus: getOpenCloseStatus,
+  threadCreation: openingThreadCreationStatusChanger,
 }
