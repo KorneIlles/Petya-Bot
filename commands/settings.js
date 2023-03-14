@@ -76,8 +76,18 @@ module.exports = {
                     subcommand
                         .setName('status')
                         .setDescription('This command will show you the status of the daily-report opening and closing features'))
-
-        )
+                .addSubcommand( subcommand =>
+                    subcommand
+                        .setName('thread')
+                        .setDescription('Automatic thread creation behavior on daily report notification message')
+                        .addStringOption(option =>
+                            option.setName('value')
+                                .setDescription('ON - Creates a thread with mention | OFF - Thread is not created with mention')
+                                .setRequired(true)
+                                .addChoices(
+                                    {name: "on", value: "on"},
+                                    {name: "off", value: "off"},
+                                ))))
         .addSubcommandGroup((group) =>
         group
             .setName("variables")

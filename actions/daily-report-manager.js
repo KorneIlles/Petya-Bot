@@ -24,10 +24,11 @@ async function dailyReportReady(client){
       roleId = getCurrentWeekId(env.ODD_WEEK)
     }
     await channel.send(`Daily report for: <@&${roleId}>`)
-    createNewThread(channel).then((thread) => {
+    if(env.DAILY_REPORT_OPENING_THREAD.toUpperCase() == "ON"){
+      await createNewThread(channel).then((thread) => {      //creates a thread for the day
       dailyReportThreadId = thread.id
-    })
-      
+    })}
+    
   });
   dailyReportClosing = new cron.CronJob('00 00 10 * * 2-4', async () => {
     // This runs every day from Tuesday-Thursday at 10:00:00
@@ -107,6 +108,26 @@ async function getOpenCloseStatus(){
           close: isClosingRun}
 }
 
+/**
+ * @description With the use of this function we can activate or deactivate the thread making when a new daily report is created
+ *
+ * @param {String} newStatus Needs to be a String value, with the following options:
+ * - **on** -  the bot is making a thread, when writes in the daily report channel
+ * - **off** - the bot is not making the thread
+ * 
+ */
+async function openingThreadCreationStatusChanger(newStatus){
+  const validInputs = ["on", "off"]
+  if(validInputs.includes(newStatus.toLowerCase())){
+    env.DAILY_REPORT_OPENING_THREAD = newStatus.toUpperCase()
+    await envUpdater.rewriteEnvFile()
+  }else{
+    console.log(`INVALID PARAMETER GIVEN FOR \'openingThreadCreationStatusChanger\'\n Given variable is: ${newStatus} instead of ${validInputs.join(", ")}`)
+  }
+
+  
+}
+
 async function createNewThread(channel){
   const weekNumber = timeCalculator.getWeeksUntilNow()
   const dayName = timeCalculator.dayNameFromToday("en-US")
@@ -136,4 +157,5 @@ module.exports = {
   stopUntilDate: dailyReportCloseUntilDate,
   stopClosing: dailyReportClosingClose,
   getStatus: getOpenCloseStatus,
+  threadCreation: openingThreadCreationStatusChanger,
 }
