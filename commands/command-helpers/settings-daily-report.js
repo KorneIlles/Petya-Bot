@@ -37,6 +37,13 @@ async function dailyReportFunctionManager(interaction){
             content:`Current statuses:\nOpen: ${open}\nClose: ${close}`,
             ephemeral: true
         })
+    }else if(interaction.options.getSubcommand() === "thread"){
+        const newStatus = interaction.options.getString("value")
+        await reportManager.threadCreation(newStatus)
+        await interaction.reply({
+            content:`Thread creation is now in \'${newStatus}\' status!`,
+            ephemeral: true
+        })
     }
 }
 module.exports ={
