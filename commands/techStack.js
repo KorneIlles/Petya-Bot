@@ -5,11 +5,27 @@ const {
     TextInputBuilder,
     TextInputStyle,
     ButtonBuilder,
-    ButtonStyle
+    ButtonStyle,
 } = require('discord.js');
 
 const queries = require('../database/database-queries.js');
-const utils = require("../utility/capitalizeTheString");
+const utils = require("../utility/StringManipulator");
+
+
+async function manipulateTechnologies(userInfo) {
+    let technologiesFinalForm = "";
+    await queries.getTechnologies(userInfo.id)
+        .then(technologies => {
+            let technologiesString = "";
+            technologies.forEach(value => {
+                technologiesString = `${technologiesString}, ${value.technology}`
+            })
+            technologiesFinalForm = technologiesString.substring(1);
+        }).catch(error => {
+            console.error(error);
+        })
+    return technologiesFinalForm;
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -41,7 +57,6 @@ module.exports = {
     async execute(interaction) {
         const option = interaction.options._subcommand;
         const userInfo = interaction.member.user
-
         switch (option) {
             case 'add':
                 const modal = new ModalBuilder()
@@ -62,17 +77,7 @@ module.exports = {
                 await interaction.showModal(modal);
                 break;
             case 'show':
-                let technologiesFinalForm = "";
-                await queries.getTechnologies(userInfo.id)
-                    .then(technologies => {
-                        let technologiesString = "";
-                        technologies.forEach(value => {
-                            technologiesString = `${technologiesString}, ${value.technology}`
-                        })
-                        technologiesFinalForm = technologiesString.substring(1);
-                    }).catch(error => {
-                        console.error(error);
-                    })
+                let technologiesFinalForm = await manipulateTechnologies(userInfo);
                 interaction.reply({
                     content: technologiesFinalForm.length > 0 ?
                         `this is your current tech stack: ***${technologiesFinalForm}***`:
@@ -95,10 +100,24 @@ module.exports = {
                                             ephemeral: true
                                         })
                                     } else {
-                                        interaction.reply({
-                                            content: `deleted this technology from your tech stack: ***${capitalizedTech}***`,
-                                            ephemeral: true
-                                        })
+                                        const member = interaction.member;
+
+                                        // Get the role to remove
+                                        const roleToRemove = member.roles.cache.find(role => role.name === capitalizedTech);
+
+                                        if (roleToRemove) {
+                                            // Remove the role
+                                            member.roles.remove(roleToRemove)
+                                                .then(() => {
+                                                    console.log(`Removed role "${roleToRemove.name}" from user "${member.user.tag}"`);
+                                                    // Send a confirmation message to the user
+                                                    interaction.reply({
+                                                        content:`Removed role "${roleToRemove.name}" from you.`,
+                                                        ephemeral: true
+                                                    });
+                                                })
+                                                .catch(console.error);
+                                        }
                                     }
                                 });
                             } else {
@@ -120,6 +139,13 @@ module.exports = {
                 }
                 break;
             case 'reset':
+                let getAllTechnologies = await manipulateTechnologies(userInfo);
+                const member = interaction.member;
+                const rolesToRemoveIds = member.roles.cache.filter(role => getAllTechnologies.includes(role.name)).map(role => role.id);
+
+                member.roles.remove(rolesToRemoveIds)
+                    .then(() => console.log(`Removed roles ${getAllTechnologies} from user ${member.user.tag}`))
+                    .catch(console.error);
                 queries.resetTechStack(userInfo.id, (error) => {
                     if (error) {
                         console.error(error);
