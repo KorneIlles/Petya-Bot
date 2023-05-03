@@ -55,6 +55,16 @@ function getTechnologies(userId) {
     });
 }
 
+function getAllUserId() {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT id FROM user`;
+        database.query(query, function (err, results) {
+            if (err) reject(err);
+            resolve(results)
+        });
+    });
+}
+
 function deleteTechnology(userId, techName, callback) {
 
     database.query('DELETE FROM tech_stack WHERE user_id = ? AND technology = ?', [userId, techName], (error) => {
@@ -75,5 +85,6 @@ module.exports = {
     checkIfTechnologyInTheDatabase,
     getTechnologies,
     deleteTechnology,
-    resetTechStack
+    resetTechStack,
+    getAllUserId
 }
