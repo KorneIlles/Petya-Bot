@@ -7,9 +7,7 @@ async function getStudentTechnologies(student){
     const technologies = await queries.getTechnologies(student.id);
     for (let i = 0; i < technologies.length; i++){
         const technology = technologies[i];
-        i+1 === technologies.length ?
-        technologiesEmbedFormat.push({ name: technology.technology, value: '\u000A', inline: true },):
-        technologiesEmbedFormat.push({ name: `${technology.technology},`, value: '\u000A', inline: true },);
+        technologiesEmbedFormat.push({ name: `> ${technology.technology}`, value: '\u000A'},);
     }
     return technologiesEmbedFormat
 }
