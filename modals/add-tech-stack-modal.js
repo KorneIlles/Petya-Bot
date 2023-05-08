@@ -40,7 +40,7 @@ module.exports = {
         const addedTechs = [];
         const userId = interaction.member.user.id
         const inputTechnologies = interaction.fields.getTextInputValue("techStackInput");
-        const technologies = inputTechnologies.split(",")
+        const technologies = inputTechnologies.replaceAll(" ", "").split(",")
 
         for (const tech of technologies) {
             if (tech.match(/^[A-Za-z0-9#]*$/) && tech.length >0) {
