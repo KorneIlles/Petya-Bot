@@ -19,13 +19,14 @@ async function storeMissingUserRoles(interaction){
     const guild = interaction.guild;
     await queries.getAllUserId()
         .then(async userIds => {
+            const noAddableRole = ["@everyone", "admin", "student", "Week A", "Week B","Admin"]
             for (const userId of userIds) {
                 const id = userId.id;
                 const member = await guild.members.fetch(id);
                 const roles = member.roles.cache;
                 const roleNames = roles.map(role => role.name);
                 for (const roleName of roleNames) {
-                    if(roleName !== "@everyone") {
+                    if(!noAddableRole.includes(roleName)) {
                         const techExists = await queries.checkIfTechnologyInTheDatabase(id, roleName);
                         if (!techExists) {
                             await queries.addTechToUserTechStack(id, roleName);
